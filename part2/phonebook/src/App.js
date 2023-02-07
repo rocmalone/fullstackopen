@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from './components/Filter.js'
+import PersonForm from './components/PersonForm.js'
+import Numbers from './components/Numbers.js'
 
 const App = () => {
   // STATE VARIABLES //
@@ -14,8 +17,8 @@ const App = () => {
   const [search, setSearch] = useState('')
 
 
-  // FUNCTIONS //
-  // When the name input box changes, update newName state
+  // EVENT HANDLERS //
+
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
@@ -33,7 +36,7 @@ const App = () => {
 
     // Persons to show, ignoring search case
     const newShowPersons = persons.filter(person => person.name.toLowerCase().includes(currentSearch.toLowerCase()) === true)
-    
+
     console.log(newShowPersons)
     setShowPersons(newShowPersons)
 
@@ -67,50 +70,14 @@ const App = () => {
     console.log(persons)
   }
 
-
-  // COMPONENTS //
-  const Numbers = ({persons}) => {
-    return (
-      <ul>
-        {persons.map(person =>
-          <li key={person.id}>
-            {person.name} {person.number}
-          </li>
-        )}
-      </ul>
-    )
-  }
-
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <div>
-          filter shown with <input 
-            value={search}
-            onChange={handleSearchChange}
-          />
-        </div>
-      </form>
+      <Filter search={search} handleSearchChange={handleSearchChange} />
+      
       <h2>Add a New Entry</h2>
-      <form>
-        <div>
-          name: <input 
-            value={newName}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          number: <input 
-            value={newNumber}
-            onChange={handleNumberChange}
-          />
-        </div>
-        <div>
-          <button type="submit" onClick={handleAddName}>add</button>
-        </div>
-      </form>
+      <PersonForm nameValue={newName} handleNameChange={handleNameChange} numberValue={newNumber} handleNumberChange={handleNumberChange} handleAddName={handleAddName} />
+
       <h2>Numbers</h2>
       <Numbers persons={showPersons}/>
     </div>
