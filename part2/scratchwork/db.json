@@ -22,7 +22,7 @@
     },
     {
       "content": "test",
-      "important": false,
+      "important": true,
       "id": 5
     },
     {
@@ -57,7 +57,7 @@
     },
     {
       "content": "asdfasdf",
-      "important": true,
+      "important": false,
       "id": 12
     },
     {

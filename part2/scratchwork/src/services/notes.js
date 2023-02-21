@@ -5,8 +5,10 @@ const baseUrl = 'http://localhost:3001/notes'
 // Get all the notes
 // Used on initial render
 const getAll = () => {
+
     // Send a get request to the baseUrl and store its response
     const request = axios.get(baseUrl)
+
     // Return the data portion of the request
     return request.then(response => response.data)
 }
