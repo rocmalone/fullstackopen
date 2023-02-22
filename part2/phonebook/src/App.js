@@ -5,72 +5,63 @@ import Numbers from './components/Numbers.js'
 
 import axios from 'axios'
 
+import personService from './services/persons.js'
+
 const App = () => {
   // STATE VARIABLES //
-  // const [persons, setPersons] = useState([
-  //   { name: 'Arto Hellas', number: '040-123456', id: 1 },
-  //   { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-  //   { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-  //   { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
-  // ])
+
   const [persons, setPersons] = useState([])
   const [showPersons, setShowPersons] = useState(persons)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
 
-  // EFFECT
-  const hook = () => {
-    console.log('effect run')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-        setShowPersons(response.data)
+  // LOAD INITIAL DATA FROM SERVER
+  useEffect( () => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+        setShowPersons(initialPersons)
       })
-  }
-  
-  useEffect(hook, [])
+  }, [])
 
 
-  // EVENT HANDLERS //
-
+  // --- EVENT HANDLERS ---
+  // SYNCHRONIZE NAME TEXT FIELD AND STATE VARIABLE
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
+  // SYNCHRONIZE NUMBER TEXT FIELD AND STATE VARIABLE
   const handleNumberChange = (event) => {
-    console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
+  // SYNCHRONIZE SEARCH TEXT FIELD AND STATE VARIABLE
+  // PERFORM SEARCH FUNCTIONALITY
   const handleSearchChange = (event) => {
     const currentSearch = event.target.value
-    console.log(event.target.value)
     setSearch(currentSearch)
 
-    // Persons to show, ignoring search case
+    // Search functionality
     const newShowPersons = persons.filter(person => person.name.toLowerCase().includes(currentSearch.toLowerCase()) === true)
 
-    console.log(newShowPersons)
-    setShowPersons(newShowPersons)
-
-    
+    setShowPersons(newShowPersons)    
   }
   
-  // When the 'add' button is clicked, add a new name to the 'persons' state object
-  const handleAddName = (event) => {
-    event.preventDefault()
 
+
+  const handleAddName = (event) => {
+    event.preventDefault() // Prevent page refresh
+
+    // Create the new person object to have the name and number corresponding to the state vars (which are sync'd with text fields)
     const personObject = {
       name: newName,
       number: newNumber,
       id: persons.length + 1
     }
 
-    // console.log(persons.some(e => e.name === personsObject.name))
     // Check if the person being added already exists
     if (persons.some(e => e.name === personObject.name)) {
       alert(`${personObject.name} already exists!`)
@@ -81,10 +72,18 @@ const App = () => {
       return
     }
 
-    setPersons(persons.concat(personObject))
-    setShowPersons(persons.concat(personObject))
-    setSearch('')
-    console.log(persons)
+    // CREATE NEW PERSON OBJECT ON SERVER
+    personService
+      .create(personObject)
+      // Update the state var with the new person
+      // NOTE: this .then only executes if the promise was fulfilled
+      // The post request in personService.create() returns the single new person object
+      .then(newPerson => {
+        console.log(newPerson)
+        setPersons(persons.concat(newPerson))
+        setShowPersons(persons.concat(newPerson))
+        setSearch('')
+      })
   }
 
   return (
