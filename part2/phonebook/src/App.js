@@ -43,6 +43,7 @@ const App = () => {
   // PERFORM SEARCH FUNCTIONALITY
   const handleSearchChange = (event) => {
     const currentSearch = event.target.value
+    console.log(currentSearch)
     setSearch(currentSearch)
 
     // Search functionality
@@ -99,11 +100,8 @@ const App = () => {
         setPersons(persons.concat(newPerson))
         setShowPersons(persons.concat(newPerson))
         setSearch('')
-    })
+      })
     }
-
-
-
   }
 
 
@@ -136,7 +134,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person =>
+        {showPersons.map(person =>
               <PersonEntry
                 key={person.id}
                 person={person}
