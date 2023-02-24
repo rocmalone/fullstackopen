@@ -135,7 +135,7 @@ const App = () => {
         setPersons(persons.concat(newPerson))
         setShowPersons(persons.concat(newPerson))
         setSearch('')
-        notify('red', `Added ${newPerson.name}`)
+        notify('green', `Added ${newPerson.name}`)
       })
     }
   }
@@ -155,7 +155,7 @@ const App = () => {
           const newPersons = persons.filter(person => person.id !== id)
           setPersons(newPersons)
           setShowPersons(newPersons)
-          notify('red', `Deleted ${personBeingDeleted.name}`)
+          notify('green', `Deleted ${personBeingDeleted.name}`)
         })
         .catch(error => {
           notify('red', `Information of ${personBeingDeleted.name} has already been removed from server`)
