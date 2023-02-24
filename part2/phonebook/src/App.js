@@ -16,6 +16,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [greenNotification, setGreenNotification] = useState(null)
+  const [redNotification, setRedNotification] = useState(null)
 
   // LOAD INITIAL DATA FROM SERVER
   useEffect( () => {
@@ -27,6 +29,19 @@ const App = () => {
       })
   }, [])
 
+
+  const GreenNotification = ( {message} ) => {
+    if(message === null) {
+      return null
+    }
+    return <h1 className='notification green'>{message}</h1>
+  }
+  const RedNotification = ( {message} ) => {
+    if(message === null) {
+      return null
+    }
+    return <h1 className='notification red'>{message}</h1>
+  }
 
   // --- EVENT HANDLERS ---
   // SYNCHRONIZE NAME TEXT FIELD AND STATE VARIABLE
@@ -53,6 +68,25 @@ const App = () => {
   }
   
 
+  // UPDATE RED OR GREEN NOTIFICATION FOR 5 SECONDS THEN RETURN TO NULL (NOT DISPLAYED)
+  const notify = (type, msg) => {
+    if (type === 'green') {
+      setGreenNotification(msg)
+      setTimeout(() => {
+        setGreenNotification(null)
+      }, 5000)
+    }
+    else if (type === 'red') {
+      setRedNotification(msg)
+      setTimeout(() => {
+        setRedNotification(null)
+      }, 5000)
+    }
+    else {
+      console.error(`notify function provided type '${type}' which is not valid, defaulting 'red'`)
+      notify('red', msg)
+    }
+  }
 
   const handleAddName = (event) => {
     event.preventDefault() // Prevent page refresh
@@ -80,6 +114,7 @@ const App = () => {
             setPersons(newPersons)
             setShowPersons(newPersons)
             setSearch('')
+            notify('green', `Updated ${newPerson.name}`)
           })
         return
       }
@@ -100,6 +135,7 @@ const App = () => {
         setPersons(persons.concat(newPerson))
         setShowPersons(persons.concat(newPerson))
         setSearch('')
+        notify('red', `Added ${newPerson.name}`)
       })
     }
   }
@@ -119,6 +155,10 @@ const App = () => {
           const newPersons = persons.filter(person => person.id !== id)
           setPersons(newPersons)
           setShowPersons(newPersons)
+          notify('red', `Deleted ${personBeingDeleted.name}`)
+        })
+        .catch(error => {
+          notify('red', `Information of ${personBeingDeleted.name} has already been removed from server`)
         })
     }
 
@@ -127,6 +167,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <GreenNotification message={ greenNotification } />
+      <RedNotification message={ redNotification } />
       <Filter search={search} handleSearchChange={handleSearchChange} />
       
       <h2>Add a New Entry</h2>

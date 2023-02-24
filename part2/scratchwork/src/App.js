@@ -1,7 +1,9 @@
-// Stopped at "You did remember to install React devtools, right?"
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import Note from './components/Note'
+import Note from './components/Note.js'
+import Notification from './components/Notification.js'
+import Footer from './components/Footer.js'
+
 // Import backend note handling
 import noteService from './services/notes'
 
@@ -9,6 +11,7 @@ const App = (props) => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
 
   // LOAD INITIAL NOTES FROM db.json FILE ON SERVER
@@ -37,9 +40,12 @@ const App = (props) => {
         console.debug(`Importance of ${id} is toggled`)
       })
       .catch(error => {
-        alert(
-          `The note '${note.content}' was already deleted from server` 
+        setNotificationMessage(
+          `Note '${note.content}' was already removed from server`
         )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
         setNotes(notes.filter(n => n.id !== id))
       })
     }
@@ -85,6 +91,7 @@ const App = (props) => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={notificationMessage} />
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
@@ -107,6 +114,7 @@ const App = (props) => {
         />
         <button type="submit">save</button>
       </form>
+      <Footer />
     </div>
   )
 }
