@@ -96,6 +96,9 @@ const Countries = ( { showCountries, showClick} ) => {
 
     // COUNTRY LIST CASE
     else {
+        if(weather.length > 0) {
+            setWeather([])
+        }
         return(
             <ul>
             {showCountries.map(country =>
