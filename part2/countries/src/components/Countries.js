@@ -1,4 +1,3 @@
-import WeatherService from '../services/WeatherService'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
