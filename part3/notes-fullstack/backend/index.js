@@ -1,10 +1,10 @@
-const cors = require('cors')
+const cors = require('cors') // Cross-origin resource sharing
 const express = require('express')
 const app = express()
 
 app.use(cors())
-
 app.use(express.json())
+app.use(express.static('build')) // Middleware to prefer returning resources in /build directory (frontend)
 
 let notes = [
     {

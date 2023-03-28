@@ -1,6 +1,6 @@
 import axios from 'axios'
 // URL for notes datastore
-const baseUrl = 'http://localhost:3001/api/notes'
+const baseUrl = '/api/notes'
 
 // Get all the notes
 // Used on initial render
