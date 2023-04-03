@@ -1,5 +1,9 @@
 const cors = require('cors') // Cross-origin resource sharing
 const express = require('express')
+const mongoose = require('mongoose')
+require('dotenv').config()
+const Note = require('./models/note')
+
 const app = express()
 
 app.use(cors())
@@ -29,7 +33,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/notes', (request, response) => {
-    response.json(notes)
+    Note.find({}).then(notes => {
+        response.json(notes)
+    })
 })
 
 app.get('/api/notes/:id', (request, response) => {
